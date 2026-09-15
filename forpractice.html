@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[연습용] 통합사회2 수행평가 2차시 - 시민 참여 인증</title>
+<style>
+:root{
+  --bg:#f4f6fa; --panel:#ffffff; --ink:#1c2431; --ink-2:#4a586e; --ink-3:#7c8aa0;
+  --line:#dfe5ee; --line-2:#eef2f7;
+  --brand:#2f5cd8; --brand-soft:#eaf0ff; --brand-deep:#1e3f9e;
+  --accent:#0f9d8f; --accent-soft:#e4f7f4;
+  --warn:#c2410c; --warn-soft:#fff2e8;
+  --good:#0f7a4a; --good-soft:#e6f6ee;
+  --bad:#b42318; --bad-soft:#fdecea;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(20,30,50,.05), 0 8px 24px rgba(20,30,50,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111722; --panel:#1a2130; --ink:#eaeff7; --ink-2:#b3c0d4; --ink-3:#8494ab;
+    --line:#2c374a; --line-2:#232c3c;
+    --brand:#7ea2ff; --brand-soft:#1e2a45; --brand-deep:#9db8ff;
+    --accent:#4fd6c4; --accent-soft:#12302e;
+    --warn:#ffab7a; --warn-soft:#3a2416;
+    --good:#5cd39a; --good-soft:#12301f;
+    --bad:#ff9c92; --bad-soft:#3a1e1c;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.65; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 80px}
+
+header.top{background:linear-gradient(135deg,var(--brand) 0%,var(--brand-deep) 100%);color:#fff;padding:22px 0 18px}
+header.top .wrap{padding-bottom:0}
+.badge{display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);
+  border-radius:999px;padding:3px 12px;font-size:12.5px;font-weight:700}
+.badge.practice{background:#ffd97a;border-color:#ffd97a;color:#6b3d00;margin-left:6px}
+h1.title{font-size:26px;font-weight:800;margin:10px 0 4px;letter-spacing:-.02em}
+.subtitle{font-size:14.5px;opacity:.9;margin:0}
+.idbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.idbar label{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:6px 10px;font-size:13.5px;font-weight:600}
+.idbar input{background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.6);
+  color:#fff;font-size:14px;font-family:inherit;width:110px;padding:2px 4px;outline:none}
+.idbar input::placeholder{color:rgba(255,255,255,.6)}
+
+nav.steps{position:sticky;top:0;z-index:50;background:var(--panel);
+  border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(20,30,50,.05)}
+.steps-inner{max-width:960px;margin:0 auto;padding:0 8px;display:flex;gap:2px;overflow-x:auto}
+.steps-inner button{flex:0 0 auto;background:none;border:none;border-bottom:3px solid transparent;
+  padding:11px 12px 9px;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink-3);
+  cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:.15s}
+.steps-inner button:hover{color:var(--ink-2);background:var(--line-2)}
+.steps-inner button.active{color:var(--brand);border-bottom-color:var(--brand)}
+.steps-inner button .num{display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--ink-2);font-size:11.5px;font-weight:800}
+.steps-inner button.active .num{background:var(--brand);color:#fff}
+.steps-inner button.done .num{background:var(--good);color:#fff}
+.progressbar{height:3px;background:var(--line-2)}
+.progressbar > div{height:100%;background:var(--accent);width:0;transition:width .3s}
+
+.page{display:none;animation:fade .25s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px;margin-top:20px;box-shadow:var(--shadow)}
+.qhead{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.qnum{flex:0 0 auto;width:32px;height:32px;border-radius:9px;background:var(--brand);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+h2.qtitle{font-size:20px;font-weight:800;margin:2px 0;letter-spacing:-.02em;flex:1 1 220px}
+h3{font-size:16px;font-weight:800;margin:24px 0 10px;display:flex;align-items:center;gap:8px}
+h3::before{content:"";width:4px;height:16px;background:var(--accent);border-radius:2px;flex:0 0 auto}
+h4{font-size:14.5px;font-weight:800;margin:16px 0 8px;color:var(--ink-2)}
+p{margin:9px 0}
+.lead{color:var(--ink-2);font-size:14.5px;margin:4px 0 0}
+
+.note{border-radius:12px;padding:13px 16px;font-size:14px;margin:14px 0}
+.note.info{background:var(--brand-soft);color:var(--ink-2)}
+.note.warn{background:var(--warn-soft);color:var(--ink-2)}
+.note.tip{background:var(--accent-soft);color:var(--ink-2)}
+.note b{color:var(--ink)}
+.note ul{margin:6px 0 0;padding-left:18px}
+.note li{margin:3px 0}
+
+.field{margin:14px 0 6px}
+.field > label{display:block;font-size:14px;font-weight:700;margin-bottom:6px;color:var(--ink)}
+.field .hint{font-size:12.5px;color:var(--ink-3);font-weight:500;margin-left:6px}
+textarea,input[type=text],input[type=url],input[type=date]{
+  width:100%;font-family:inherit;font-size:15px;color:var(--ink);background:var(--panel);
+  border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;line-height:1.6;
+  outline:none;transition:border-color .15s,box-shadow .15s;resize:vertical}
+textarea:focus,input:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+textarea::placeholder,input::placeholder{color:var(--ink-3);opacity:.8}
+.counter{text-align:right;font-size:12px;color:var(--ink-3);margin-top:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+/* 자료 유형 선택 */
+.picker{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.picker label{cursor:pointer}
+.picker input{position:absolute;opacity:0;width:0;height:0}
+.picker span{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:var(--panel);
+  border-radius:10px;padding:9px 15px;font-size:14.5px;font-weight:700;color:var(--ink-2);transition:.15s}
+.picker label:hover span{border-color:var(--brand);color:var(--brand-deep)}
+.picker input:checked + span{background:var(--brand);border-color:var(--brand);color:#fff}
+.picker input:focus-visible + span{box-shadow:0 0 0 3px var(--brand-soft)}
+.srcblock[hidden]{display:none}
+.srcblock{border:1.5px solid var(--line);border-radius:12px;padding:4px 16px 14px;margin-top:14px;background:var(--line-2)}
+.srcblock .st{font-size:13px;font-weight:800;color:var(--brand-deep);margin:12px 0 2px}
+
+/* 사진 */
+.photobox{border:2px dashed var(--line);border-radius:12px;padding:16px;text-align:center;background:var(--panel);margin-top:8px}
+.photobox img{max-width:100%;max-height:320px;border-radius:8px;display:none;margin:0 auto 10px}
+.photobox.has img{display:block}
+.photobox .ph{font-size:13.5px;color:var(--ink-3)}
+.photobox.has .ph{display:none}
+.filebtn{display:inline-block;cursor:pointer;font-size:14px;font-weight:700;color:var(--brand);
+  border:1.5px solid var(--brand);border-radius:9px;padding:8px 16px;margin-top:8px;background:var(--panel)}
+.filebtn:hover{background:var(--brand);color:#fff}
+.filebtn input{display:none}
+.rmphoto{font-size:13px;color:var(--bad);background:none;border:none;cursor:pointer;font-family:inherit;font-weight:700;margin-left:8px}
+
+details.help{border:1.5px dashed var(--line);border-radius:12px;margin:16px 0;background:var(--line-2)}
+details.help[open]{background:var(--panel);border-style:solid}
+details.help > summary{cursor:pointer;list-style:none;padding:12px 16px;font-size:14px;font-weight:800;
+  color:var(--brand-deep);display:flex;align-items:center;gap:8px}
+details.help > summary::-webkit-details-marker{display:none}
+details.help > summary::after{content:"펼치기";margin-left:auto;font-size:12px;font-weight:700;
+  color:var(--ink-3);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+details.help[open] > summary::after{content:"접기"}
+details.help > div.body{padding:2px 16px 16px}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 4px}
+.chip{background:var(--panel);border:1.5px solid var(--line);border-radius:999px;padding:6px 13px;
+  font-size:13.5px;font-family:inherit;color:var(--ink-2);cursor:pointer;transition:.15s;text-align:left}
+.chip:hover{border-color:var(--brand);color:var(--brand-deep);background:var(--brand-soft)}
+.chip .r{font-size:11.5px;color:var(--ink-3);margin-left:5px}
+
+.tablewrap{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:14px}
+th,td{border-bottom:1px solid var(--line-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--line-2);font-weight:800;font-size:13px;color:var(--ink-2);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td a{color:var(--brand);text-decoration:none;font-weight:600;word-break:break-all}
+td a:hover{text-decoration:underline}
+.tag{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:6px;
+  padding:1px 7px;font-size:11.5px;font-weight:800;white-space:nowrap}
+
+.ex{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;
+  padding:12px 16px;margin:12px 0;font-size:14px}
+.ex .lbl{font-size:11.5px;font-weight:800;letter-spacing:.04em;color:var(--accent);display:block;margin-bottom:4px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+@media(max-width:640px){.cmp{grid-template-columns:1fr}}
+.cmp > div{border-radius:12px;padding:13px 15px;font-size:14px}
+.cmp .no{background:var(--bad-soft)}
+.cmp .yes{background:var(--good-soft)}
+.cmp .h{font-weight:800;font-size:13px;margin-bottom:6px}
+.cmp .no .h{color:var(--bad)} .cmp .yes .h{color:var(--good)}
+
+.pagenav{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+.btn{font-family:inherit;font-size:14.5px;font-weight:700;border-radius:10px;padding:11px 20px;
+  border:1.5px solid var(--line);background:var(--panel);color:var(--ink-2);cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--ink-3);color:var(--ink)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-deep);border-color:var(--brand-deep);color:#fff}
+.kakaowarn{background:#ffd97a;color:#5b3200;padding:11px 16px;font-size:14px;font-weight:700;
+  display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;line-height:1.5;text-align:center}
+.kakaowarn button{font-family:inherit;font-size:13.5px;font-weight:800;border:none;border-radius:8px;
+  padding:8px 16px;background:#5b3200;color:#ffd97a;cursor:pointer}
+.kakaowarn button:hover{background:#3d2100}
+.kakaowarn[hidden]{display:none}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn.subtle{font-size:13.5px;padding:8px 14px;color:var(--ink-3);background:transparent}
+.btn.subtle:hover{color:var(--ink-2);border-color:var(--line)}
+.btn.busy{opacity:.6;pointer-events:none}
+
+.checklist{list-style:none;padding:0;margin:10px 0}
+.checklist li{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:10px;
+  font-size:14px;margin-bottom:6px;background:var(--line-2)}
+.checklist li .mk{font-weight:800;flex:0 0 auto}
+.checklist li.ok{background:var(--good-soft)} .checklist li.ok .mk{color:var(--good)}
+.checklist li.no{background:var(--warn-soft)} .checklist li.no .mk{color:var(--warn)}
+#preview{white-space:pre-wrap;font-size:13.5px;line-height:1.75;background:var(--line-2);
+  border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:14px;max-height:420px;overflow:auto}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--bg);padding:11px 22px;border-radius:999px;font-size:14px;font-weight:700;
+  opacity:0;pointer-events:none;transition:.25s;z-index:200}
+.toast.show{opacity:1;transform:translateX(-50%)}
+
+@media print{
+  @page{size:A4;margin:13mm 12mm}
+  body{background:#fff;color:#000;font-size:10.5pt}
+  nav.steps,.pagenav,.btnrow,.toast,.no-print,#preview,.filebtn,.rmphoto{display:none !important}
+  header.top{background:#fff !important;color:#000;border-bottom:2px solid #000;padding:0 0 8px;margin-bottom:6px}
+  header.top .badge{border:1px solid #000;color:#000;background:#fff}
+  h1.title{font-size:16pt;color:#000;margin:6px 0 2px}
+  .subtitle{color:#333;font-size:9.5pt}
+  .idbar{margin-top:8px}
+  .idbar label{background:#fff;border:1px solid #000;color:#000;padding:3px 8px}
+  .idbar input{color:#000;border-bottom:1px solid #000}
+  .wrap{padding:0}
+  .page{display:block !important;animation:none !important;opacity:1 !important;transform:none !important}
+  .page + .page{page-break-before:always}
+  .card{box-shadow:none;border:1px solid #999;margin-top:8px;padding:12px 14px;border-radius:8px}
+  .qnum{background:#000 !important;color:#fff !important;width:26px;height:26px;font-size:12pt}
+  h2.qtitle{font-size:13.5pt}
+  h3{font-size:11.5pt;margin:14px 0 6px} h3::before{background:#000}
+  h4{font-size:10.5pt;margin:10px 0 4px}
+  details.help,.chips,.picker{display:none !important}
+  textarea,input[type=text],input[type=url]{border:1px solid #999;background:#fff;color:#000;font-size:10.5pt}
+  .field,.ex,.note,.tablewrap,.cmp,.checklist li,.srcblock,.photobox{page-break-inside:avoid}
+  .note{background:#f4f4f4 !important;color:#222;border:1px solid #ddd;padding:9px 12px;font-size:9.5pt}
+  .cmp > div{border:1px solid #bbb;background:#fafafa !important;font-size:9.5pt}
+  .cmp .no .h,.cmp .yes .h{color:#000}
+  .ex{background:#f7f7f7 !important;border-left:3px solid #666;font-size:9.5pt}
+  .srcblock{background:#fff;border:1px solid #bbb}
+  .photobox{border:1px solid #bbb;min-height:40mm}
+  table{font-size:9pt} th{background:#eee !important;color:#000}
+  a{color:#000;text-decoration:none}
+  body.compact .note,body.compact .cmp,body.compact .tablewrap,
+  body.compact .lead,body.compact .ex,body.compact h3{display:none !important}
+  body.compact .page[data-step="시작 안내"]{display:none !important}
+  body.compact .page[data-step="제출·정리"]{display:none !important}
+  body.compact .page[data-step="문제 선정"]{page-break-before:auto}
+  body.compact textarea{min-height:26mm}
+}
+</style></head>
+<body>
+
+<div class="kakaowarn" id="kakaowarn" hidden>
+  <span>⚠️ 카카오톡 안에서 열면 PDF가 저장되지 않을 수 있어요. 크롬이나 삼성 인터넷으로 열어 주세요.</span>
+  <button type="button" id="btnExternal">브라우저로 열기</button>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <span class="badge">통합사회2 · 1단원 인권 보장과 헌법</span><span class="badge practice">연습용</span>
+    <h1 class="title">수행평가 (2차시) 시민 참여 실천하기</h1>
+    <p class="subtitle">실제 수행평가 전에 미리 연습해 보는 자료입니다. 1차시에 세운 계획을 실제로 실천하고, 그 과정을 인증한 뒤 느낀 점을 정리해 봅시다.</p>
+    <div class="idbar">
+      <label>학년·반 <input type="text" id="cls" placeholder="1-3" data-k="학년반"></label>
+      <label>학번 <input type="text" id="sid" placeholder="10315" data-k="학번" data-req></label>
+      <label>이름 <input type="text" id="sname" placeholder="홍길동" data-k="이름" data-req></label>
+    </div>
+  </div>
+</header>
+
+<nav class="steps no-print">
+  <div class="steps-inner" id="stepnav"></div>
+  <div class="progressbar"><div id="pbar"></div></div>
+</nav>
+
+<div class="wrap">
+
+<!-- PAGE 0 -->
+<section class="page active" data-step="시작 안내">
+  <div class="card">
+    <div class="qhead"><div class="qnum" style="background:var(--accent)">★</div>
+      <h2 class="qtitle">활동 안내</h2></div>
+    <div class="note warn" style="margin-top:10px"><b>이 자료는 연습용입니다.</b> 실제 수행평가를 보기 전에 미리 연습해 보는 것이므로, 여기에 쓴 내용은 성적에 반영되지 않습니다. 마음 편히 채워 보세요.</div>
+    <p class="lead">계획만으로는 아무것도 달라지지 않습니다. 1차시에 세운 계획을 <b>실제로 한 번 실천해 보고</b>, 그 과정을 남겨 정리하는 시간입니다.</p>
+
+    <h3>진행 순서</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>순서</th><th>하는 일</th></tr></thead>
+        <tbody>
+          <tr><td><b>1</b></td><td>1차시에 세운 계획을 실제로 실천하기</td></tr>
+          <tr><td><b>2</b></td><td>실천하는 동안 <b>사진이나 화면 캡처</b>를 남기기</td></tr>
+          <tr><td><b>3</b></td><td>참여 날짜와 사진 설명을 기록하기</td></tr>
+          <tr><td><b>4</b></td><td>느낀 점을 5줄 이상 쓰기</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note warn">
+      <b>꼭 확인하세요.</b>
+      <ul>
+        <li><b>인증 사진이 없으면 실천을 확인할 수 없습니다.</b> 실천하는 그 순간에 반드시 사진이나 화면 캡처를 남기세요.</li>
+        <li>사진에 <b>사람의 얼굴, 차량 번호판, 집 주소, 전화번호</b>가 드러나지 않게 하고, 필요하면 가려 주세요.</li>
+        <li>이 화면은 새로고침하면 내용이 사라집니다. 마지막 <b>[제출·정리]</b> 페이지에서 <b>[PDF 파일로 저장]</b>을 꼭 눌러 주세요.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pagenav"><span></span><button class="btn primary" data-go="next">시작하기 →</button></div>
+</section>
+
+<!-- PAGE 1 : 시민 참여 인증 -->
+<section class="page" data-step="참여 인증">
+  <div class="card">
+    <div class="qhead"><div class="qnum">6</div>
+      <h2 class="qtitle">시민 참여 인증</h2></div>
+    <p class="lead">언제, 무엇을 했는지 <b>사진 한 장과 설명</b>으로 보여 주세요.</p>
+
+    <details class="help" open>
+      <summary>📷 어떤 사진을 올리면 되나요?</summary>
+      <div class="body">
+        <p style="margin-top:2px">직접 찍은 사진뿐 아니라 <b>휴대폰 화면 캡처</b>도 인증이 됩니다. 내가 한 참여 방법에 맞는 것을 올리세요.</p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>참여 방법</th><th>이런 것을 남기면 됩니다</th></tr></thead>
+            <tbody>
+              <tr><td><b>신고·민원</b></td><td>안전신문고·국민신문고 <b>접수 완료 화면</b>, 접수번호가 보이는 화면, 기관에서 온 <b>답변 문자·메일 화면</b></td></tr>
+              <tr><td><b>정책 제안</b></td><td>국민생각함·시청/구청 시민제안에 <b>등록된 글 화면</b>, 청소년참여포털 제안 화면</td></tr>
+              <tr><td><b>건의서 전달</b></td><td>작성한 <b>건의서 사진</b>, 담당 선생님이나 기관에 전달하는 장면, 접수 확인 화면</td></tr>
+              <tr><td><b>캠페인·서명</b></td><td>캠페인 진행 장면, 직접 만든 <b>포스터·카드뉴스</b>, 게시한 곳의 사진, 서명 용지</td></tr>
+              <tr><td><b>실태 조사</b></td><td>직접 작성한 <b>기록지·표</b>, 만든 지도, 설문 결과 화면</td></tr>
+              <tr><td><b>직접 실천</b></td><td>정화 활동이나 현장 활동을 하는 장면</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note tip" style="font-size:13.5px">
+          <b>사진 남길 때 요령</b>
+          <ul>
+            <li>화면 캡처는 <b>날짜와 제목이 보이게</b> 찍으세요. 접수번호나 이름 같은 개인정보는 가려도 됩니다.</li>
+            <li>현장 사진은 <b>어디인지 알아볼 수 있게</b> 주변이 조금 나오도록 찍으면 좋습니다.</li>
+            <li>친구가 함께 나온다면 <b>먼저 동의를 구하세요.</b> 모르는 사람의 얼굴은 가려 주세요.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <div class="field">
+      <label for="q6date">1) 참여 날짜 <span class="hint">실제로 실천한 날</span></label>
+      <input type="text" id="q6date" data-k="6-1. 참여 날짜" data-req placeholder="예) 2026년 9월 12일 (금) 오전 8시경">
+    </div>
+
+    <h4>2) 참여 인증 사진</h4>
+    <div class="field">
+      <label>인증 사진 ① <span class="hint">꼭 한 장은 올려 주세요</span></label>
+      <div class="photobox" data-slot="1">
+        <img alt="인증 사진 1">
+        <div class="ph">사진이나 화면 캡처를 올리면 여기에 표시됩니다</div>
+        <label class="filebtn no-print">📷 사진 선택<input type="file" accept="image/*"></label>
+        <button type="button" class="rmphoto no-print" style="display:none">사진 지우기</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>인증 사진 ② <span class="hint">선택 — 접수 화면과 현장 사진을 함께 내고 싶을 때</span></label>
+      <div class="photobox" data-slot="2">
+        <img alt="인증 사진 2">
+        <div class="ph">필요할 때만 올리면 됩니다</div>
+        <label class="filebtn no-print">📷 사진 선택<input type="file" accept="image/*"></label>
+        <button type="button" class="rmphoto no-print" style="display:none">사진 지우기</button>
+      </div>
+    </div>
+
+    <details class="help">
+      <summary>💡 사진 설명 예시 보기</summary>
+      <div class="body">
+        <div class="ex"><span class="lbl">예시 · 신고 인증</span>
+          9월 12일 아침 등교 시간에 학교 정문 앞 횡단보도에서 찍은 사진입니다. 횡단보도에서 5m 이내에 세워진 차량 세 대를 확인하고, 그 자리에서 안전신문고 앱으로 위치와 사진을 넣어 신고했습니다. 두 번째 사진은 신고가 접수되었다는 확인 화면입니다.
+        </div>
+        <div class="ex"><span class="lbl">예시 · 캠페인 인증</span>
+          9월 15일 점심시간에 2학년 복도 게시판 앞에서 찍은 사진입니다. 동아리 부원 세 명과 함께 무단투기 지점을 표시한 '우리 동네 쓰레기 지도'를 붙이고, 지나가는 학생들에게 분리배출 안내 카드를 나누어 주었습니다.
+        </div>
+        <div class="cmp">
+          <div class="no"><div class="h">✕ 이렇게 쓰면 아쉬워요</div>"신고한 사진입니다." → 언제·어디서·무엇을 했는지 알 수 없음</div>
+          <div class="yes"><div class="h">○ 이렇게 쓰면 좋아요</div><b>언제 + 어디서 + 무엇을 했는지 + 사진이 무엇을 보여주는지</b>가 모두 들어감</div>
+        </div>
+      </div>
+    </details>
+
+    <div class="field">
+      <label for="q6desc">3) 인증 사진에 대한 설명 <span class="hint">언제 / 어디서 / 무엇을 했는지가 드러나게</span></label>
+      <textarea id="q6desc" rows="5" data-k="6-3. 사진 설명" data-req data-min="60"
+        placeholder="예) 9월 12일 아침 학교 정문 앞에서 찍은 사진입니다. 횡단보도 앞에 세워진 차량을 확인하고 안전신문고로 신고했습니다."></textarea>
+      <div class="counter" data-for="q6desc"></div>
+    </div>
+  </div>
+  <div class="pagenav"><button class="btn" data-go="prev">← 이전</button><button class="btn primary" data-go="next">다음 →</button></div>
+</section>
+
+<!-- PAGE 2 : 느낀 점 -->
+<section class="page" data-step="느낀 점">
+  <div class="card">
+    <div class="qhead"><div class="qnum">7</div>
+      <h2 class="qtitle">느낀 점</h2></div>
+    <p class="lead"><b>5줄 이상</b> 써 주세요. 활동 소감만이 아니라 <b>시민 참여에 대해 알게 된 것</b>이 들어가야 합니다.</p>
+
+    <div class="note tip">
+      <b>아래 네 가지 중 세 가지 이상을 담아 보세요.</b>
+      <ul>
+        <li>① 내가 실제로 한 일과 그때의 상황</li>
+        <li>② 계획과 달랐던 점, 어려웠던 점</li>
+        <li>③ 시민 참여에 대해 <b>새로 알게 되었거나 생각이 바뀐 점</b></li>
+        <li>④ 앞으로 시민으로서 어떻게 하고 싶은지</li>
+      </ul>
+    </div>
+
+    <details class="help">
+      <summary>💡 예시 답안 보기</summary>
+      <div class="body">
+        <div class="ex"><span class="lbl">예시 · 통학로 안전 활동</span>
+          9월 12일 아침에 친구들과 정문 앞에 서서 세워진 차량을 세어 보고 안전신문고로 신고했습니다. 막상 앱을 열어 보니 사진과 위치만으로 신고가 되어서, 어렵고 복잡할 거라고 생각했던 일이 생각보다 간단하다는 것을 알게 되었습니다.<br>
+          다만 신고를 하고 나서도 다음 날 아침에 다시 가 보니 차량이 그대로 서 있었습니다. 한 번의 신고로 바뀌지 않는다는 것을 직접 겪으면서, 왜 계속해서 기록을 모으고 여러 사람이 함께 요구해야 하는지 이해하게 되었습니다.<br>
+          예전에는 불편한 일이 있어도 '누군가 알아서 해결해 주겠지'라고 생각했는데, 이번에 직접 해 보니 그 '누군가'가 바로 나일 수 있다는 것을 알았습니다. 앞으로도 우리 동네에서 위험하거나 불편한 곳을 보면 그냥 지나치지 않고 근거를 모아 정확하게 요구해 보고 싶습니다.
+        </div>
+        <div class="cmp">
+          <div class="no"><div class="h">✕ 이렇게 쓰면 아쉬워요</div>"재미있었다. 뿌듯했다. 앞으로도 열심히 해야겠다." → 무엇을 했고 무엇을 알게 되었는지가 없음</div>
+          <div class="yes"><div class="h">○ 이렇게 쓰면 좋아요</div>내가 한 일 → 예상과 달랐던 점 → 그래서 알게 된 것 → 앞으로의 다짐 순서로 이어짐</div>
+        </div>
+      </div>
+    </details>
+
+    <div class="field">
+      <label for="q7">느낀 점 <span class="hint">5줄 이상</span></label>
+      <textarea id="q7" rows="10" data-k="7. 느낀 점" data-req data-min="200"
+        placeholder="① 내가 한 일 → ② 어려웠던 점 → ③ 새로 알게 된 점 → ④ 앞으로 어떻게 하고 싶은지 순서로 써 보세요."></textarea>
+      <div class="counter" data-for="q7"></div>
+    </div>
+  </div>
+  <div class="pagenav"><button class="btn" data-go="prev">← 이전</button><button class="btn primary" data-go="next">제출 점검 →</button></div>
+</section>
+
+<!-- PAGE 3 : 제출 -->
+<section class="page" data-step="제출·정리">
+  <div class="card">
+    <div class="qhead"><div class="qnum" style="background:var(--good)">✓</div>
+      <h2 class="qtitle">제출 전 점검 및 저장</h2></div>
+    <p class="lead">빠진 항목이 없는지 확인하고, 반드시 <b>PDF로 저장</b>한 뒤 창을 닫으세요.</p>
+
+    <h3>작성 점검표</h3>
+    <ul class="checklist" id="checklist"></ul>
+
+    <h3>다시 한번 확인해 보세요</h3>
+    <div class="note info">
+      <ul>
+        <li>인증 사진에 <b>얼굴·번호판·주소</b> 같은 개인정보가 남아 있지 않나요?</li>
+        <li>사진 설명에 <b>언제·어디서·무엇을 했는지</b>가 모두 들어 있나요?</li>
+        <li>느낀 점이 <b>5줄 이상</b>이고, 소감만이 아니라 <b>알게 된 점</b>이 들어 있나요?</li>
+      </ul>
+    </div>
+
+    <h3>저장하기</h3>
+    <div class="note warn">이 페이지를 벗어나거나 새로고침하면 입력한 내용이 사라집니다. <b>[PDF 파일로 저장]을 꼭 눌러 주세요.</b><br>저장된 <b>학번_이름_시민참여인증_연습용.pdf</b> 파일을 선생님께 제출하면 됩니다.<br><b>갤럭시·안드로이드·PC</b>에서는 눌러서 바로 내려받습니다. 파일은 <b>다운로드</b> 폴더에 저장됩니다.<br><b>아이패드·아이폰</b>에서는 공유 창이 열립니다. 거기서 <b>[파일에 저장]</b>을 고르면 파일 앱에 저장됩니다.<br>선생님이 <b>이미지로 내라고 안내하신 경우</b>에만 <b>[이미지로 저장]</b>을 누르세요. 모든 쪽이 한 장으로 이어진 그림 파일이 만들어집니다.<br>저장이 안 되는 경우에만 <b>[답안 텍스트 복사]</b>를 눌러 과제 답변란에 붙여넣으세요.</div>
+    <div class="btnrow no-print">
+      <button class="btn primary" id="btnPdf">📄 PDF 파일로 저장</button>
+      <button class="btn" id="btnImg">🖼 이미지로 저장</button>
+    </div>
+    <div class="btnrow no-print" style="margin-top:8px">
+      <button class="btn subtle" id="btnCopy">📋 답안 텍스트 복사 <span style="font-weight:600;opacity:.7">(저장이 안 될 때만)</span></button>
+    </div>
+  </div>
+  <div class="pagenav"><button class="btn" data-go="prev">← 이전</button><span></span></div>
+</section>
+
+</div><!-- /wrap -->
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  // 카카오톡 인앱 브라우저 안내
+  var isKakao = /KAKAOTALK/i.test(navigator.userAgent);
+  var isAndroid = /Android/i.test(navigator.userAgent);
+  if(isKakao){
+    var kw = document.getElementById('kakaowarn');
+    if(kw) kw.hidden = false;
+  }
+  var extBtn = document.getElementById('btnExternal');
+  if(extBtn){
+    extBtn.addEventListener('click', function(){
+      var url = location.href;
+      if(isAndroid){
+        location.href = 'intent://' + url.replace(/^https?:\/\//, '') +
+          '#Intent;scheme=' + (location.protocol === 'https:' ? 'https' : 'http') +
+          ';package=com.android.chrome;end';
+      } else {
+        location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(url);
+      }
+    });
+  }
+
+  var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+  var nav = document.getElementById('stepnav');
+  var pbar = document.getElementById('pbar');
+  var cur = 0;
+
+  pages.forEach(function(p, i){
+    var b = document.createElement('button');
+    b.innerHTML = '<span class="num">' + (i === 0 ? '★' : (i === pages.length-1 ? '✓' : (i === 1 ? '6' : '7'))) + '</span>' + p.dataset.step;
+    b.addEventListener('click', function(){ go(i); });
+    nav.appendChild(b);
+  });
+  var navBtns = Array.prototype.slice.call(nav.children);
+
+  function go(i){
+    if(i < 0 || i >= pages.length) return;
+    pages[cur].classList.remove('active');
+    navBtns[cur].classList.remove('active');
+    cur = i;
+    pages[cur].classList.add('active');
+    navBtns[cur].classList.add('active');
+    pbar.style.width = (cur/(pages.length-1)*100) + '%';
+    navBtns[cur].scrollIntoView({block:'nearest', inline:'center', behavior:'smooth'});
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(cur === pages.length-1) buildChecklist();
+    markDone();
+  }
+  navBtns[0].classList.add('active');
+
+  document.addEventListener('click', function(e){
+    var t = e.target.closest && e.target.closest('[data-go]');
+    if(t){ go(t.dataset.go === 'next' ? cur+1 : cur-1); }
+  });
+
+  /* ---- 사진 슬롯 ---- */
+  var photos = {};
+  Array.prototype.slice.call(document.querySelectorAll('.photobox')).forEach(function(box){
+    var slot = box.dataset.slot;
+    var img = box.querySelector('img');
+    var file = box.querySelector('input[type=file]');
+    var del = box.querySelector('.rmphoto');
+    file.addEventListener('change', function(e){
+      var f = e.target.files && e.target.files[0];
+      if(!f) return;
+      var rd = new FileReader();
+      rd.onload = function(ev){
+        var im = new Image();
+        im.onload = function(){
+          var max = 1400, w = im.width, h = im.height;
+          if(w > max || h > max){ var sc = max/Math.max(w,h); w = Math.round(w*sc); h = Math.round(h*sc); }
+          var cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+          cv.getContext('2d').drawImage(im, 0, 0, w, h);
+          try{ img.src = cv.toDataURL('image/jpeg', 0.85); }catch(err){ img.src = ev.target.result; }
+          box.classList.add('has'); del.style.display = 'inline';
+          var pre = new Image();
+          pre.onload = function(){ photos[slot] = pre; markDone(); };
+          pre.onerror = function(){ photos[slot] = null; };
+          pre.src = img.src;
+          toast('사진을 넣었습니다.');
+        };
+        im.onerror = function(){ toast('이미지를 읽지 못했습니다. 다른 사진으로 시도해 주세요.'); };
+        im.src = ev.target.result;
+      };
+      rd.readAsDataURL(f);
+    });
+    del.addEventListener('click', function(){
+      img.removeAttribute('src'); box.classList.remove('has');
+      photos[slot] = null; del.style.display = 'none'; file.value = '';
+      markDone();
+    });
+  });
+
+  /* ---- 글자수·줄수 ---- */
+  document.querySelectorAll('[data-min]').forEach(function(el){
+    var c = document.querySelector('.counter[data-for="' + el.id + '"]');
+    var min = parseInt(el.dataset.min, 10);
+    function upd(){
+      if(!c) return;
+      var txt = el.value.trim();
+      var n = txt.length;
+      if(el.id === 'q7'){
+        var lines = txt ? txt.split('\n').filter(function(x){ return x.trim(); }).length : 0;
+        var enough = n >= min;
+        c.textContent = lines + '줄 · ' + n + '자' + (enough ? ' · 충분해요' : ' (5줄 이상 쓰세요)');
+        c.style.color = enough ? 'var(--good)' : '';
+      } else {
+        c.textContent = n + '자' + (n >= min ? ' · 충분해요' : '');
+        c.style.color = n >= min ? 'var(--good)' : '';
+      }
+    }
+    el.addEventListener('input', upd); upd();
+  });
+
+  var fields = Array.prototype.slice.call(document.querySelectorAll('[data-k]'));
+  function v(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+  function hasPhoto(slot){ return !!photos[slot]; }
+
+  function markDone(){
+    pages.forEach(function(p, i){
+      var fs = Array.prototype.slice.call(p.querySelectorAll('[data-req]'));
+      var boxes = p.querySelectorAll('.photobox[data-slot="1"]');
+      if(!fs.length && !boxes.length) return;
+      var need = fs.length + boxes.length, got = 0;
+      fs.forEach(function(f){ if(f.value.trim()) got++; });
+      if(boxes.length && hasPhoto('1')) got++;
+      navBtns[i].classList.toggle('done', need > 0 && need === got && i !== cur);
+    });
+  }
+  document.addEventListener('input', markDone);
+
+  function buildChecklist(){
+    var ul = document.getElementById('checklist');
+    ul.innerHTML = '';
+    var items = [
+      {name:'학번·이름', ok: !!(v('sid') && v('sname'))},
+      {name:'6-1. 참여 날짜', ok: !!v('q6date')},
+      {name:'6-2. 참여 인증 사진', ok: hasPhoto('1')},
+      {name:'6-3. 인증 사진에 대한 설명', ok: !!v('q6desc')},
+      {name:'7. 느낀 점 (5줄 이상)', ok: (function(){
+        var t = v('q7');
+        return t.split('\n').filter(function(x){ return x.trim(); }).length >= 5 || t.length >= 200;
+      })()}
+    ];
+    var missing = 0;
+    items.forEach(function(it){
+      if(!it.ok) missing++;
+      var li = document.createElement('li');
+      li.className = it.ok ? 'ok' : 'no';
+      li.innerHTML = '<span class="mk">' + (it.ok ? '✓' : '!') + '</span><span>' + it.name +
+        (it.ok ? '' : (it.name.indexOf('사진') >= 0 ? ' — 아직 올리지 않았습니다' : ' — 아직 작성하지 않았습니다')) + '</span>';
+      ul.appendChild(li);
+    });
+    var head = document.createElement('li');
+    head.className = missing ? 'no' : 'ok';
+    head.innerHTML = '<span class="mk">' + (missing ? '!' : '✓') + '</span><span><b>' +
+      (missing ? '아직 채우지 않은 항목이 ' + missing + '개 있습니다.' : '모두 작성했습니다. 저장한 뒤 제출하세요.') + '</b></span>';
+    ul.insertBefore(head, ul.firstChild);
+  }
+
+  function makeText(){
+    var L = ['[연습용] [통합사회2 수행평가 · 2차시] 시민 참여 실천하기', ''];
+    L.push('학년·반 ' + v('cls') + ' / 학번 ' + v('sid') + ' / 이름 ' + v('sname'));
+    L.push('작성일 ' + new Date().toLocaleDateString('ko-KR'), '', '────────────────────────', '');
+    L.push('■ 6-1. 참여 날짜', v('q6date') || '(미작성)', '');
+    L.push('■ 6-2. 참여 인증 사진', (hasPhoto('1') ? '사진 ① 첨부됨' : '(사진 없음)') + (hasPhoto('2') ? ' / 사진 ② 첨부됨' : ''), '');
+    L.push('■ 6-3. 인증 사진에 대한 설명', v('q6desc') || '(미작성)', '');
+    L.push('■ 7. 느낀 점', v('q7') || '(미작성)', '');
+    return L.join('\n');
+  }
+
+  /* ===== 채점용 PDF 생성 (외부 라이브러리 없음) ===== */
+  var A4W = 1240, A4H = 1754, MG = 84;
+  var PT_W = 595.28, PT_H = 841.89;
+  var KFONT = '"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR","Nanum Gothic",sans-serif';
+
+  function pdfGroups(){
+    var rows = [{label:'참여 날짜', text:v('q6date')}];
+    rows.push({label:'참여 인증 사진 ①', img:'1'});
+    rows.push({label:'인증 사진에 대한 설명', text:v('q6desc')});
+    if(hasPhoto('2')) rows.push({label:'참여 인증 사진 ②', img:'2'});
+    return [
+      {no:'6', title:'시민 참여 인증', rows:rows},
+      {no:'7', title:'느낀 점', rows:[{text:v('q7')}]}
+    ];
+  }
+
+  function wrapText(ctx, text, maxW){
+    var lines = [];
+    String(text).split('\n').forEach(function(para){
+      if(!para){ lines.push(''); return; }
+      var line = '';
+      for(var i = 0; i < para.length; i++){
+        var test = line + para[i];
+        if(ctx.measureText(test).width > maxW && line){ lines.push(line); line = para[i]; }
+        else line = test;
+      }
+      lines.push(line);
+    });
+    return lines;
+  }
+
+  function renderPages(){
+    var groups = pdfGroups(), out = [], cv, ctx, y;
+    var CW = A4W - MG * 2, BOTTOM = A4H - MG - 40;
+
+    function newPage(){
+      cv = document.createElement('canvas'); cv.width = A4W; cv.height = A4H;
+      ctx = cv.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, A4W, A4H);
+      ctx.textBaseline = 'top';
+      out.push(cv); y = MG;
+    }
+    function room(n){ if(y + n > BOTTOM) newPage(); }
+    function para(text, x, maxW, size, color){
+      ctx.font = size + 'px ' + KFONT; ctx.fillStyle = color;
+      var lines = wrapText(ctx, text, maxW), lh = Math.round(size * 1.5);
+      lines.forEach(function(ln){
+        if(y + lh > BOTTOM){ newPage(); ctx.font = size + 'px ' + KFONT; ctx.fillStyle = color; }
+        ctx.fillText(ln, x, y); y += lh;
+      });
+    }
+
+    newPage();
+    ctx.font = '22px ' + KFONT; ctx.fillStyle = '#6b7280';
+    ctx.fillText('통합사회2 · 1단원 인권 보장과 헌법 · 수행평가(2차시)', MG, y); y += 34;
+    ctx.font = 'bold 40px ' + KFONT; ctx.fillStyle = '#111827';
+    ctx.fillText('시민 참여 실천하기', MG, y);
+    var tw = ctx.measureText('시민 참여 실천하기').width;
+    ctx.fillStyle = '#ffd97a'; ctx.fillRect(MG + tw + 22, y + 4, 112, 42);
+    ctx.font = 'bold 25px ' + KFONT; ctx.fillStyle = '#6b3d00';
+    ctx.fillText('연습용', MG + tw + 42, y + 12);
+    y += 56;
+
+    ctx.fillStyle = '#f3f4f6'; ctx.fillRect(MG, y, CW, 64);
+    ctx.fillStyle = '#2f5cd8'; ctx.fillRect(MG, y, 7, 64);
+    ctx.font = 'bold 26px ' + KFONT; ctx.fillStyle = '#111827';
+    ctx.fillText('학년·반  ' + (v('cls') || '—') + '        학번  ' + (v('sid') || '—') + '        이름  ' + (v('sname') || '—'), MG + 26, y + 19);
+    ctx.font = '21px ' + KFONT; ctx.fillStyle = '#6b7280';
+    var d = new Date().toLocaleDateString('ko-KR');
+    ctx.fillText(d, A4W - MG - ctx.measureText(d).width - 20, y + 22);
+    y += 84;
+
+    groups.forEach(function(gp){
+      room(150);
+      ctx.fillStyle = '#111827'; ctx.fillRect(MG, y, CW, 3); y += 16;
+      ctx.font = 'bold 28px ' + KFONT; ctx.fillStyle = '#111827';
+      ctx.fillText(gp.no + '.  ' + gp.title, MG, y); y += 44;
+
+      gp.rows.forEach(function(r){
+        if(r.img){
+          var im = photos[r.img];
+          if(r.label){
+            room(80);
+            ctx.font = 'bold 22px ' + KFONT; ctx.fillStyle = '#2f5cd8';
+            ctx.fillText(r.label, MG + 34, y); y += 32;
+          }
+          if(!im){
+            ctx.font = '24px ' + KFONT; ctx.fillStyle = '#b42318';
+            ctx.fillText('(사진 없음)', MG + 34, y); y += 50;
+            return;
+          }
+          var maxW = CW - 34, maxH = 700;
+          var w = im.width, h = im.height, sc = Math.min(maxW / w, maxH / h, 1);
+          w = Math.round(w * sc); h = Math.round(h * sc);
+          if(y + h + 26 > BOTTOM) newPage();
+          ctx.drawImage(im, MG + 34, y, w, h);
+          ctx.strokeStyle = '#d1d5db'; ctx.lineWidth = 1;
+          ctx.strokeRect(MG + 34.5, y + .5, w, h);
+          y += h + 26;
+          return;
+        }
+        var txt = (r.text || '').trim(), empty = !txt;
+        var body = empty ? '(미작성)' : txt, lh = Math.round(24 * 1.5);
+        ctx.font = '24px ' + KFONT;
+        var need = (r.label ? 32 : 0) + wrapText(ctx, body, CW - 34).length * lh + 14;
+        if(y + need > BOTTOM && need <= BOTTOM - MG) newPage();
+        if(r.label){
+          ctx.font = 'bold 22px ' + KFONT; ctx.fillStyle = '#2f5cd8';
+          ctx.fillText(r.label, MG + 34, y); y += 32;
+        }
+        para(body, MG + 34, CW - 34, 24, empty ? '#b42318' : '#1f2937');
+        y += 14;
+      });
+      y += 12;
+    });
+
+    var who = '연습용 · ' + (v('sid') || '') + '  ' + (v('sname') || '');
+    out.forEach(function(c, i){
+      var cx = c.getContext('2d');
+      cx.textBaseline = 'top';
+      cx.strokeStyle = '#e5e7eb'; cx.lineWidth = 1;
+      cx.beginPath(); cx.moveTo(MG, A4H - MG + 6); cx.lineTo(A4W - MG, A4H - MG + 6); cx.stroke();
+      cx.font = '20px ' + KFONT; cx.fillStyle = '#9ca3af';
+      cx.fillText(who, MG, A4H - MG + 20);
+      var pg = (i + 1) + ' / ' + out.length;
+      cx.fillText(pg, A4W - MG - cx.measureText(pg).width, A4H - MG + 20);
+    });
+    return out;
+  }
+
+  function b64ToBytes(b64){
+    var bin = atob(b64), a = new Uint8Array(bin.length);
+    for(var i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i);
+    return a;
+  }
+
+  function buildPdf(pgs){
+    var enc = new TextEncoder(), parts = [], len = 0, off = {};
+    function put(d){ var b = (typeof d === 'string') ? enc.encode(d) : d; parts.push(b); len += b.length; }
+    function obj(n, body, extra){
+      off[n] = len;
+      put(n + ' 0 obj\n' + body + '\n');
+      if(extra !== undefined){ put('stream\n'); put(extra); put('\nendstream\n'); }
+      put('endobj\n');
+    }
+    put('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+    var imgs = pgs.map(function(cv){ return b64ToBytes(cv.toDataURL('image/jpeg', 0.85).split(',')[1]); });
+    var kids = pgs.map(function(_, i){ return (3 + i * 3) + ' 0 R'; });
+    obj(1, '<< /Type /Catalog /Pages 2 0 R >>');
+    obj(2, '<< /Type /Pages /Count ' + pgs.length + ' /Kids [' + kids.join(' ') + '] >>');
+    var last = 2;
+    pgs.forEach(function(cv, i){
+      var pg = 3 + i * 3, ct = pg + 1, im = pg + 2;
+      obj(pg, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + PT_W + ' ' + PT_H + '] ' +
+            '/Resources << /XObject << /Im0 ' + im + ' 0 R >> >> /Contents ' + ct + ' 0 R >>');
+      var stream = 'q ' + PT_W + ' 0 0 ' + PT_H + ' 0 0 cm /Im0 Do Q';
+      obj(ct, '<< /Length ' + stream.length + ' >>', stream);
+      obj(im, '<< /Type /XObject /Subtype /Image /Width ' + cv.width + ' /Height ' + cv.height +
+            ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + imgs[i].length + ' >>', imgs[i]);
+      last = im;
+    });
+    var xref = len, total = last + 1;
+    var s = 'xref\n0 ' + total + '\n0000000000 65535 f \n';
+    for(var k = 1; k < total; k++) s += String(off[k] || 0).padStart(10, '0') + ' 00000 n \n';
+    s += 'trailer\n<< /Size ' + total + ' /Root 1 0 R >>\nstartxref\n' + xref + '\n%%EOF\n';
+    put(s);
+    var outb = new Uint8Array(len), o = 0;
+    parts.forEach(function(b){ outb.set(b, o); o += b.length; });
+    return outb;
+  }
+
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  var saving = false;
+  function lock(btn, label){
+    saving = true;
+    var old = btn.innerHTML;
+    btn.innerHTML = label;
+    btn.classList.add('busy');
+    setTimeout(function(){ saving = false; btn.innerHTML = old; btn.classList.remove('busy'); }, 2500);
+  }
+
+  function needsId(){
+    if(v('sid') && v('sname')) return false;
+    toast('먼저 맨 위에 학번과 이름을 입력해 주세요.');
+    window.scrollTo({top:0, behavior:'smooth'});
+    var el = document.getElementById(v('sid') ? 'sname' : 'sid'); if(el) el.focus();
+    return true;
+  }
+
+  // 파일 전달: 아이패드·아이폰은 공유 창, 그 밖에는 바로 내려받기
+  function deliver(bytes, mime, name, kind){
+    var blob = new Blob([bytes], {type:mime});
+    try{
+      if(isIOS && typeof File === 'function' && navigator.canShare){
+        var file = new File([bytes], name, {type:mime});
+        if(navigator.canShare({files:[file]})){
+          navigator.share({files:[file], title:name}).then(function(){
+            toast('저장했습니다. 파일 앱에서 확인하세요.');
+          }).catch(function(err){
+            if(err && err.name === 'AbortError') return;
+            openFile(blob);
+          });
+          toast("공유 창에서 '파일에 저장'을 선택하세요.");
+          return;
+        }
+      }
+    }catch(e){ /* 공유 미지원이면 아래로 */ }
+    try{
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 3000);
+      toast(isAndroid ? (kind + ' 저장 완료 — [내 파일] 앱의 Download 폴더에 있어요') : (kind + ' 저장 완료 — ' + name));
+    }catch(e){ openFile(blob); }
+  }
+
+  // 마지막 수단: 새 탭에서 열어 직접 저장하게 한다
+  function openFile(blob){
+    try{
+      var url = URL.createObjectURL(blob);
+      var w = window.open(url, '_blank');
+      if(!w) throw new Error('blocked');
+      toast('새 창에 열렸습니다. 공유 버튼 → 파일에 저장을 눌러 주세요.');
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
+    }catch(e){
+      toast('저장이 막혀 있습니다. [답안 텍스트 복사]를 이용해 주세요.');
+    }
+  }
+
+  function savePdf(){
+    if(saving) return;
+    if(needsId()) return;
+    lock(document.getElementById('btnPdf'), '저장 중…');
+    var bytes;
+    try{ bytes = buildPdf(renderPages()); }
+    catch(e){ toast('PDF를 만들지 못했습니다. [답안 텍스트 복사]를 이용해 주세요.'); return; }
+    deliver(bytes, 'application/pdf', v('sid') + '_' + v('sname') + '_시민참여인증_연습용.pdf', 'PDF');
+  }
+
+  // 이미지 저장: 모든 쪽을 한 장으로 이어 붙인다
+  function saveImage(){
+    if(saving) return;
+    if(needsId()) return;
+    lock(document.getElementById('btnImg'), '저장 중…');
+    try{
+      var pgs = renderPages(), gap = 20;
+      var cv = document.createElement('canvas');
+      cv.width = A4W;
+      cv.height = pgs.length * A4H + gap * (pgs.length - 1);
+      var ctx = cv.getContext('2d');
+      ctx.fillStyle = '#d1d5db'; ctx.fillRect(0, 0, cv.width, cv.height);
+      pgs.forEach(function(pg, i){ ctx.drawImage(pg, 0, i * (A4H + gap)); });
+
+      var ext = 'png', mime = 'image/png';
+      var bytes = b64ToBytes(cv.toDataURL('image/png').split(',')[1]);
+      if(bytes.length > 4500000){          // 폼 업로드 용량을 넘으면 JPG로
+        ext = 'jpg'; mime = 'image/jpeg';
+        bytes = b64ToBytes(cv.toDataURL('image/jpeg', 0.88).split(',')[1]);
+      }
+      deliver(bytes, mime, v('sid') + '_' + v('sname') + '_시민참여인증_연습용.' + ext, '이미지');
+    }catch(e){
+      toast('이미지를 만들지 못했습니다. [PDF 파일로 저장]을 이용해 주세요.');
+    }
+  }
+
+  document.getElementById('btnPdf').addEventListener('click', savePdf);
+  document.getElementById('btnImg').addEventListener('click', saveImage);
+
+  document.getElementById('btnCopy').addEventListener('click', function(){
+    var t = makeText();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(function(){ toast('답안을 복사했습니다.'); }, function(){ fallbackCopy(t); });
+    } else fallbackCopy(t);
+  });
+  function fallbackCopy(t){
+    var ta = document.createElement('textarea');
+    ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); toast('답안을 복사했습니다.'); }
+    catch(e){ toast('복사에 실패했습니다. 답안을 직접 선택해 복사해 주세요.'); }
+    document.body.removeChild(ta);
+  }
+
+  var tEl = document.getElementById('toast'), tTimer;
+  function toast(msg){
+    tEl.textContent = msg; tEl.classList.add('show');
+    clearTimeout(tTimer); tTimer = setTimeout(function(){ tEl.classList.remove('show'); }, 2400);
+  }
+
+  window.addEventListener('beforeunload', function(e){
+    var any = fields.some(function(f){ return f.value.trim(); }) || hasPhoto('1');
+    if(any){ e.preventDefault(); e.returnValue = ''; }
+  });
+
+  go(0);
+})();
+</script>
+</body>
+</html>
